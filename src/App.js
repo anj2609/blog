@@ -1,25 +1,53 @@
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
+import Navbar from './components/Navbar';
+import PostForm from './components/PostForm';
+import PostList from './components/PostList';
+import PostDetails from './components/PostDetails';
 import './App.css';
 
-function App() {
+const App = () => {
+  const [posts, setPosts] = useState([]);
+  const [selectedPost, setSelectedPost] = useState(null);
+
+  useEffect(() => {
+    const storedPosts = JSON.parse(localStorage.getItem('posts')) || [];
+    setPosts(storedPosts);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('posts', JSON.stringify(posts));
+  }, [posts]);
+
+  const addPost = (post) => {
+    setPosts([...posts, post]);
+  };
+
+  const deletePost = (index) => {
+    const updatedPosts = posts.filter((_, i) => i !== index);
+    setPosts(updatedPosts);
+  };
+
+  const viewPost = (index) => {
+    setSelectedPost(posts[index]);
+  };
+
+  const goBack = () => {
+    setSelectedPost(null);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app-container">
+      <Navbar />
+      {selectedPost ? (
+        <PostDetails post={selectedPost} goBack={goBack} />
+      ) : (
+        <>
+          <PostForm addPost={addPost} />
+          <PostList posts={posts} onDelete={deletePost} onViewPost={viewPost} />
+        </>
+      )}
     </div>
   );
-}
+};
 
 export default App;
