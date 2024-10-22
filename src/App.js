@@ -11,20 +11,23 @@ const App = () => {
 
   useEffect(() => {
     const storedPosts = JSON.parse(localStorage.getItem('posts')) || [];
-    setPosts(storedPosts);
+    setPosts([storedPosts]);
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem('posts', JSON.stringify(posts));
-  }, [posts]);
+  // useEffect(() => {
+  //   localStorage.setItem('posts', JSON.stringify(posts));
+  // }, [posts]);
 
   const addPost = (post) => {
+    console.log(post,"deege")
     setPosts([...posts, post]);
+    console.log(posts)
   };
 
   const deletePost = (index) => {
     const updatedPosts = posts.filter((_, i) => i !== index);
     setPosts(updatedPosts);
+
   };
 
   const viewPost = (index) => {
